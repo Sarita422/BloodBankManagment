@@ -1,0 +1,50 @@
+﻿@model List<BloodBankManagementSystem.Models.LastHistoryModel>
+@{
+    ViewBag.Title = "AcceptorsHistory";
+    Layout = "~/Views/Shared/_AcceptorsLayout.cshtml";
+}
+<html>
+<head>
+    <title>AcceptorsHistory</title>
+    <style>
+        tr {
+            padding: 50px;
+            transition: transform .2s; /* Animation */
+            margin: 0 auto;
+        }
+        tr:hover {
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body>
+    <h3>Previous Blood Requested History </h3>    
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Blood Group</th>
+                    <th>Blood Product</th>
+                    <th>Date</th>
+                    <th>Amount Of Blood</th>
+                    <th>Quotation</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    <tr>
+                        <td>@v.Bg</td>
+                        <td>@v.BgProduct</td>
+                        <td>@v.Date</td>
+                        <td>@v.Qty</td>
+                        <td>@v.Quotation</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>   
+</body>
+</html>
+
+

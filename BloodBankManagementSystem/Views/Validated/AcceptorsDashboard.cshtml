@@ -1,0 +1,83 @@
+﻿@model List<BloodBankManagementSystem.Models.DonorHospitalDetailsModel>
+@{
+    Layout = "~/Views/Shared/_AcceptorsLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <title>Acceptors Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            debugger;
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                title: "Details",
+                dialogClass: 'myTitleClass'
+            });
+        });
+        function AssignButtonClicked(obj) {
+            var id = obj;
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Validated/DetailsofDonorsHospitals",
+                data: { Id: id },
+                dataType: "html",
+                success: function (response) {
+                    $('#dialog').html(response);
+                    $('#dialog').dialog('open');
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    </script>
+    <style type="text/css">
+        .myTitleClass .ui-dialog-titlebar {
+            background: #337ab7;
+            text-decoration-color: white;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <br />
+    <div class="container">
+        <div class="list-group">
+            <div class="row">
+                <div class="col-lg-2 col-md-2"></div>
+                <div class="col-lg-4 col-md-4"><a href="/Validated/AcceptorsSednBloodRequest" class="list-group-item" style="color:darkblue">Send Blood Request</a></div>
+                <div class="col-lg-4 col-md-4"><a href="/Validated/AcceptorsHistory" class="list-group-item" style="color:darkblue">Previous History</a></div>
+                <div class="col-lg-2 col-md-2"></div>
+            </div>
+        </div>
+        <h2>Registered Donors and hospitals</h2>
+        <div class="row">
+            @foreach (var v in Model)
+            {
+                <div class="col-lg-3 col-md-3">
+                    <div class="card">
+                        <div class="card-header">Name: @v.Name</div>
+                        <div class="card-body">Role: @v.Role</div>
+                        <div class="card-footer">
+                            <a class="details" href="javascript:;" onclick="AssignButtonClicked(@v.Rid);">Details</a>
+                        </div>
+                    </div> &nbsp;
+                </div>
+            }
+        </div>
+    </div>
+    <div id="dialog" style="display: none">
+    </div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+﻿@model BloodBankManagementSystem.Models.UnregisteredViewModel
+@{
+    ViewBag.Title = "UnregisteredBloodRequest";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+        $(function () {
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                title: "Respond To Unregistered Request",
+                dialogClass: 'myTitleClass'
+            });
+            $("#RequestGrid .details").click(function () {
+                var pid = $(this).closest("tr").find("td").eq(0).html();
+                var pname = $(this).closest("tr").find("td").eq(1).html();
+                var cname = $(this).closest("tr").find("td").eq(7).html();
+                var contact = $(this).closest("tr").find("td").eq(8).html();
+                $.ajax({
+                    type: "POST",
+                    url: "/Validated/RespondToUnregisteredRequest",
+                    data: { Pid: pid, Pname: pname, Cname: cname, Mobile: contact },
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                        $('#dialog').dialog('open');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+            $("#datepicker").click(function () {
+                $("#datepicker").css({ "border-color": "skyblue" });
+            });
+            $("#City").click(function () {
+                $("#City").css({ "border-color": "skyblue" });
+            });
+            $('#btnSearch').click(function () {
+                var count = 0;
+                if ($("#datepicker").val() == "") {
+                    $("#datepicker").css({ "border-color": "red" });
+                    $("#datepicker").attr({ "placeholder": "Please Select Date" });
+                    count++;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").css({ "border-color": "red" });
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("SearchUnregisteredRequest", "Validated", FormMethod.Post))
+    {
+    <div class="row">
+        <div class="col-lg-2 col-md-2"></div>
+        <div class="col-lg-3 col-md-3">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.TextBoxFor(date => date.SearchValuesModel.Date, new { @class = "form-control", @autocomplete = "off", id = "datepicker", placeholder = "Select Date" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="form-group">
+                @Html.DropDownListFor(city => city.SearchValuesModel.City, new SelectList(Model.SearchValuesModel.CityList), "--Select--", new { @class = "form-control", id = "City" })
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+            <input type="submit" value="Search" id="btnSearch" class="btn btn-primary btn-block center-block" />
+        </div>
+        <div class="col-lg-2 col-md-2"></div>
+    </div>
+    }
+    <div>
+        <table class="table table-responsive" id="RequestGrid">
+            <thead>
+                <tr>
+                    <th style="display:none"></th>
+                    <th>Patient Name</th>
+                    <th>Blood Group</th>
+                    <th>Product Type</th>
+                    <th>City</th>
+                    <th>Hospital Name</th>
+                    <th>Amount of Blood</th>
+                    <th>Contact Name</th>
+                    <th>Contact Number</th>
+                    <th>Date</th>
+                    <th>Quotation</th>
+                    <th>Respond</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.LstUnregisteredUserModels)
+                {
+                    <tr>
+                        <td style="display:none">@v.Pid</td>
+                        <td>@v.PatientName</td>
+                        <td>@v.Bg</td>
+                        <td>@v.BloodProduct</td>
+                        <td>@v.City</td>
+                        <td>@v.HospitalName</td>
+                        <td>@v.AmountOfBlood</td>
+                        <td>@v.ContactName</td>
+                        <td>@v.Mobile</td>
+                        <td>@v.Date</td>
+                        <td>@v.YourQuotation</td>
+                        <td><a class="details" href="javascript:;">Respond</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="dialog" style="display: none">
+    </div>
+</body>
+</html>
+

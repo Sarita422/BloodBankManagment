@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "HospitalDashboard";
+    Layout = "~/Views/Shared/_HospitalLayout.cshtml";
+}
+<html>
+<head>
+    <title>Hospital Dashboard</title>
+    <style type="text/css">
+        .jumbotron {
+            background-image: url(../Images/hosp.jpg);
+            height:660px;
+        }
+    </style>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-lg-3 col-md-3"> </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="list-group">
+                    <a href="/Validated/HospitalRequestForBlood" class="list-group-item" style="color:darkblue;text-align:center">Request For Blood</a>
+                    <a href="/Validated/HospitalDonateBloodRequest" class="list-group-item" style="color:darkblue;text-align:center">Donate to Blood Bank</a>
+                    <a href="/Validated/StockAvailability" class="list-group-item" style="color:darkblue;text-align:center">Check Stock Availability</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3"> </div>
+        </div>
+    </div>
+    <div class="body"></div>
+</body>
+</html>

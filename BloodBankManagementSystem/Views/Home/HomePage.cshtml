@@ -1,0 +1,84 @@
+﻿@model BloodBankManagementSystem.Models.LoginModel
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style type="text/css">
+        .jumbotron {
+            background-image: url(../Images/blood-bank.jpg);
+            height: 600px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#EmailMob").click(function () {
+                $("#EmailMob").css({ "border-color": "skyblue" });
+            });
+            $("#Password").click(function () {
+                $("#Password").css({ "border-color": "skyblue" });
+            });
+            $('#btnLogin').click(function () {
+                var count = 0;
+                if ($("#EmailMob").val() == "") {
+                    $("#EmailMob").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#Password").val() == "") {
+                    $("#Password").css({ "border-color": "red" });
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <div class="list-group">
+                    <a href="/Home/DonorRegistration" class="list-group-item" style="color:darkblue">Donor Registration</a>
+                    <a href="/Home/AcceptorsRegistration" class="list-group-item" style="color:darkblue">Acceptors Registration</a>
+                    <a href="/Home/HospitalRegistration" class="list-group-item" style="color:darkblue">Hospital Registration</a>
+                    <a href="/Home/StockAvailability" class="list-group-item" style="color:darkblue">Stock Availability</a>
+                    <a href="/Home/UnregisteredBloodRequest" class="list-group-item" style="color:darkblue">Request Blood (Emergency)</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4"> </div>
+            <div class="col-lg-4 col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Login</div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Login","Home",FormMethod.Post))
+                        {
+                        <div class="form-group">
+                            @Html.LabelFor(emailmob => emailmob.EmailMob, "Email/Mobile No. :")
+                            @Html.TextBoxFor(emailmob => emailmob.EmailMob,new { @class="form-control",placeholder="Enter Email/Mobile Number" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(pwd => pwd.Password, "Password :")
+                            @Html.PasswordFor(pwd => pwd.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                        </div>  
+                        <input type="submit" value="Login" id="btnLogin" class="btn btn-primary center-block" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

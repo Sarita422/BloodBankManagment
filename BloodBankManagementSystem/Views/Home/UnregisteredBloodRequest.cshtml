@@ -1,0 +1,247 @@
+﻿@model BloodBankManagementSystem.Models.UnregisteredUserModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blood Request By Unregistered User</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#City').prop("disabled", true);
+            $('#State').change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/GetCityList",
+                    data: { state: $('#State').val() },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#City').empty();
+                        $('#City').append('<option>--Select--</option>');
+                        $.each(data, function (i, data) {
+                            $('#City').append('<option>' + data + '</option>');
+                        });
+                        $('#City').prop("disabled", false);
+                    }
+                });
+            });
+            $('#Bg').change(function () {
+                $('#BloodProduct').change(function () {
+                    debugger;
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/GetCost",
+                        data: { bg: $('#Bg').val(), product: $('#BloodProduct').val() },
+                        dataType: "json",
+                        success: function (data) {
+                            $('#Cost').val(data+' per 100ML');
+                        }
+                    });
+                });
+            });
+            $("#PatientName").keypress(function () {
+                $("#PatientName").css({ "border-color": "skyblue" });
+            });
+            $("#Bg").click(function () {
+                $("#Bg").css({ "border-color": "skyblue" })
+            });
+            $("#BloodProduct").click(function () {
+                $("#BloodProduct").css({ "border-color": "skyblue" })
+            });
+            $("#State").click(function () {
+                $("#State").css({ "border-color": "skyblue" })
+            });
+            $("#City").click(function () {
+                $("#City").css({ "border-color": "skyblue" })
+            });
+            $("#AmountOfBlood").keypress(function () {
+                $("#AmountOfBlood").css({ "border-color": "skyblue" });
+            });
+            $("#ContactName").keypress(function () {
+                $("#ContactName").css({ "border-color": "skyblue" });
+            });
+            $("#Mobile").keypress(function () {
+                $("#Mobile").css({ "border-color": "skyblue" })
+            });
+            $("#YourQuotation").click(function () {
+                $("#YourQuotation").css({ "border-color": "skyblue" });
+            });
+            $("#datepicker").click(function () {
+                $("#datepicker").css({ "border-color": "skyblue" });
+            });
+            $('#btnSubmit').click(function () {
+                var count = 0;
+                if ($("#PatientName").val() == "") {
+                    $("#PatientName").val('');
+                    $("#PatientName").css({ "border-color": "red" });
+                    $("#PatientName").attr("placeholder", "Please Enter Your Name");
+                    count++;
+                }  
+                if ($("#Bg").val() == "") {
+                    $("#Bg").val('');
+                    $("#Bg").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#BloodProduct").val() == "") {
+                    $("#BloodProduct").val('');
+                    $("#BloodProduct").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#State").val() == "") {
+                    $("#State").val('');
+                    $("#State").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").val('');
+                    $("#City").css({ "border-color": "red" });
+                    count++;
+                }
+                var regBloodAmount = /^[0-9]+$/;
+                var bloodAmount = $("#AmountOfBlood").val();
+                if ($("#AmountOfBlood").val() == "") {
+                    $("#AmountOfBlood").val('');
+                    $("#AmountOfBlood").css({ "border-color": "red" });
+                    $("#AmountOfBlood").attr("placeholder", "Please Enter Required Amount Of blood in ML");
+                    count++;
+                }
+                else if (!bloodAmount.match(regBloodAmount)) {
+                    $("#AmountOfBlood").val('');
+                    $("#AmountOfBlood").css({ "border-color": "red" });
+                    $("#AmountOfBlood").attr("placeholder", "Please Enter Required Amount Of blood in ML");
+                    count++;
+                }
+                var mbl = $("#Mobile").val();
+                var rexmbl = /^[0-9]{10}$/
+                if (mbl == "") {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Contact Number");
+                    count++;
+                }
+                else if (!mbl.match(rexmbl)) {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Valid Contact Number");
+                    count++;
+                }
+                if ($("#ContactName").val() == "") {
+                    $("#ContactName").val('');
+                    $("#ContactName").css({ "border-color": "red" });
+                    $("#ContactName").attr("placeholder", "Please Enter Contact Person Name");
+                    count++;
+                }
+                if ($("#YourQuotation").val() == "") {
+                    $("#YourQuotation").val('');
+                    $("#YourQuotation").css({ "border-color": "red" });
+                    $("#YourQuotation").attr("placeholder", "Please Enter Your Quotation");
+                    count++;
+                }
+                if ($("#datepicker").val() == "") {
+                    $("#datepicker").val('');
+                    $("#datepicker").css({ "border-color": "red" });
+                    $("#datepicker").attr("placeholder", "Please Select Date When Blood Required");
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+
+    </script>
+    <script>
+        var j = jQuery.noConflict();
+        j(function () {
+            j("#datepicker").datepicker();
+        });
+    </script>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Unregistered User Blood Request</div>
+        <div class="panel-body">
+            <div class="container">
+                @using (Html.BeginForm("UnregisteredBloodRequest", "Home", FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="col-lg-1 col-md-1"></div>
+                        <div class="col-lg-5 col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(name => name.PatientName, "Patient Name :")
+                                @Html.TextBoxFor(name => name.PatientName, new { @class = "form-control", placeholder = "Enter Patient Name" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(bg => bg.Bg, "Blood Group :")
+                                @Html.DropDownListFor(bg => bg.Bg, new SelectList(Model.BgList), "--Select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(product => product.BloodProduct, "Blood Product Type :")
+                                @Html.DropDownListFor(product => product.BloodProduct, new SelectList(Model.BloodProductList), "--Select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(state => state.State, "State :")
+                                @Html.DropDownListFor(state => state.State, new SelectList(Model.StateList), "--Select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(city => city.City, "City :")
+                                @Html.DropDownListFor(city => city.City, new SelectList(Model.CityList), "--Select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(hname => hname.HospitalName, "Hospital Name and Address :")
+                                @Html.TextAreaFor(hname => hname.HospitalName, new { @class = "form-control", placeholder = "Enter Hospital Name and Address " })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(amountofblood => amountofblood.AmountOfBlood, "Amount Of Blood :")
+                                @Html.TextBoxFor(amountofblood => amountofblood.AmountOfBlood, new { @class = "form-control", placeholder = "Enter Required Amount of Blood" })
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(cname => cname.ContactName, "Contact Name :")
+                                @Html.TextBoxFor(cname => cname.ContactName, new { @class = "form-control", placeholder = "Enter Contact Person Name" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(mobile => mobile.Mobile, "Contact No. :")
+                                @Html.TextBoxFor(mobile => mobile.Mobile, new { @class = "form-control", placeholder = "Enter Contact Number" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(cost => cost.Cost, "Blood Bank Expected Selling Cost :")
+                                @Html.TextBoxFor(cost => cost.Cost, new { @class = "form-control", @readonly = "true" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(yourqt => yourqt.YourQuotation, "Your Buying Cost :")
+                                @Html.TextBoxFor(yourqt => yourqt.YourQuotation, new { @class = "form-control", placeholder = "Enter Your Buying Cost" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(date => date.Date, "When Need? Date :")
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(date => date.Date, new { @class = "form-control", @id = "datepicker", placeholder = "Select Blood Required Date" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1"></div>
+                    </div>
+                    <input type="submit" value="Submit" id="btnSubmit" class="btn btn-primary btn-block center-block" />
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

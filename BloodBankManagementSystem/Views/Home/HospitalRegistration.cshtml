@@ -1,0 +1,199 @@
+﻿@model BloodBankManagementSystem.Models.RegistrationModel
+@{
+                /**/
+
+                Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title>Hospital Registration</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#City').prop("disabled", true);
+            $('#State').change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/GetCityList",
+                    data: { state: $('#State').val() },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#City').empty();
+                        $('#City').append('<option>--Select--</option>');
+                        $.each(data, function (i, data) {
+                            $('#City').append('<option>' + data + '</option>');
+                        });
+                        $('#City').prop("disabled", false);
+                    }
+                });
+            });
+            $("#Name").keypress(function () {
+                $("#Name").css({ "border-color": "skyblue" });
+            });
+            $("#Email").keypress(function () {
+                $("#Email").css({ "border-color": "skyblue" });
+            });
+            $("#Password").keypress(function () {
+                $("#Password").css({ "border-color": "skyblue" });
+            });
+            $("#Cpassword").keypress(function () {
+                $("#Cpassword").css({ "border-color": "skyblue" });
+            });
+            $("#State").click(function () {
+                $("#State").css({ "border-color": "skyblue" })
+            });
+            $("#City").click(function () {
+                $("#City").css({ "border-color": "skyblue" })
+            });
+            $("#Mobile").keypress(function () {
+                $("#Mobile").css({ "border-color": "skyblue" })
+            });
+            $("#RegDesignation").keypress(function () {
+                $("#RegDesignation").css({ "border-color": "skyblue" })
+            });
+            $('#btnRegister').click(function () {
+                debugger;
+                var count = 0;
+                if ($("#Name").val() == "") {
+                    $("#Name").val('');
+                    $("#Name").css({ "border-color": "red" });
+                    $("#Name").attr("placeholder", "Please Enter Hospital Name");
+                    count++;
+                }
+                var email = $("#Email").val()
+                var rexemail = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                if ($("#Email").val() == "" || !email.match(rexemail)) {
+                    $("#Email").val('');
+                    $("#Email").css({ "border-color": "red" });
+                    $("#Email").attr("placeholder", "Please Enter Valid Email Id");
+                    count++;
+                }
+                if ($("#Password").val() == "") {
+                    $("#Password").val('');
+                    $("#Password").css({ "border-color": "red" });
+                    $("#Password").attr("placeholder", "Please Enter Password");
+                    count++;
+                }
+                var pwd = $("#Password").val();
+                var cpwd = $("#Cpassword").val();
+                if (cpwd != pwd || cpwd == "") {
+                    $("#Cpassword").val('');
+                    $("#Cpassword").css({ "border-color": "red" });
+                    $("#Cpassword").attr("placeholder", "Password is Not Matching");
+                    count++;
+                }
+                if ($("#State").val() == "") {
+                    $("#State").val('');
+                    $("#State").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").val('');
+                    $("#City").css({ "border-color": "red" });
+                    count++;
+                }
+                var mbl = $("#Mobile").val();
+                var rexmbl = /^[0-9]{10}$/
+                if (mbl == "") {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Contact Number");
+                    count++;
+                }
+                else if (!mbl.match(rexmbl)) {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Valid Contact Number");
+                    count++;
+                }
+                if ($("#RegDesignation").val() == "") {
+                    $("#RegDesignation").val('');
+                    $("#RegDesignation").css({ "border-color": "red" });
+                    $("#RegDesignation").attr("placeholder", "Please Enter Your Designation");
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Hospitals Registration</div>
+        <div class="panel-body">
+            <div class="container">
+                @using (Html.BeginForm("HospitalRegistration", "Home", FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="col-lg-1 col-md-1"></div>
+                        <div class="col-lg-5 col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(name => name.Name, "Hospital Name :")
+                                @Html.TextBoxFor(name => name.Name, new { @class = "form-control", placeholder = "Enter Hospital Name" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(email => email.Email, "Email Id :")
+                                @Html.TextBoxFor(email => email.Email, new { @class = "form-control", placeholder = "Enter Email Id" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(pwd => pwd.Password, "Password :")
+                                @Html.PasswordFor(pwd => pwd.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(cpwd => cpwd.Cpassword, "Confirm Password :")
+                                @Html.PasswordFor(cpwd => cpwd.Cpassword, new { @class = "form-control", placeholder = "Enter Password To Confirm" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(state => state.State, "State :")
+                                @Html.DropDownListFor(state => state.State, new SelectList(Model.StateList), "--Select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(city => city.City, "City :")
+                                @Html.DropDownListFor(city => city.City, new SelectList(Model.CityList), "--Select--", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5">                            
+                            <div class="form-group">
+                                @Html.LabelFor(mbl => mbl.Mobile, "Contact Number :")
+                                @Html.TextBoxFor(mbl => mbl.Mobile, new { @class = "form-control", placeholder = "Enter Contact Number" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(desgn => desgn.RegDesignation, "Register Designation :")
+                                @Html.TextAreaFor(desgn => desgn.RegDesignation, new { @class = "form-control", placeholder = "Enter Your Designation " })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(office => office.OfficeNum, "Office No. :")
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8">
+                                        @Html.TextBoxFor(office => office.OfficeNum, new { @class = "form-control", placeholder = "Enter Office Contact Number" })
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        @Html.TextBoxFor(ext => ext.Ext, new { @class = "form-control", placeholder = "Extension" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(addr => addr.Address, "Address :")
+                                @Html.TextAreaFor(addr => addr.Address, new { @class = "form-control", placeholder = "Enter Hospital Address " })
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1"></div>
+                    </div>
+                    <input type="submit" value="Register" id="btnRegister" class="btn btn-primary btn-block center-block" />
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

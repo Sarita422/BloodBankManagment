@@ -1,0 +1,134 @@
+﻿@model BloodBankManagementSystem.Models.BloodStockCostViewModel
+@{
+    ViewBag.Title = "UpdateStockAvailabilityDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dahsboard</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 360,
+                height: 360,
+                title: "Update Blood stock",
+                dialogClass: 'myTitleClass'
+            });
+            $("#StockGrid .details").click(function () {
+                debugger;
+                var bg = $(this).closest("tr").find("th").eq(0).html();
+                var whole = $(this).closest("tr").find("td").eq(0).html();
+                var packed = $(this).closest("tr").find("td").eq(1).html();
+                var frozen = $(this).closest("tr").find("td").eq(2).html();
+                var platelets = $(this).closest("tr").find("td").eq(3).html();
+                $.ajax({
+                    type: "POST",
+                    url: "/Validated/UpdateBloodStockAvailability",
+                    data: { Bg: bg, WholeBlood: whole, PackedCells: packed, FrozenPlasma: frozen, Platelets: platelets },
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                        $('#dialog').dialog('open');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+            $("#CostGrid .costDetails").click(function () {
+                var bg = $(this).closest("tr").find("th").eq(0).html();
+                var product = $(this).closest("tr").find("th").eq(1).html();
+                var qty = $(this).closest("tr").find("td").eq(0).html();
+                var units = $(this).closest("tr").find("td").eq(1).html();
+                var cost = $(this).closest("tr").find("td").eq(2).html();
+                $.ajax({
+                    type: "POST",
+                    url: "/Validated/UpdateBloodCost",
+                    data: { Bg: bg, ProductType: product, Qty: qty, Units: units, Cost: cost },
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                        $('#dialog').dialog('open');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <p class="text-center text-success">Blood Stock Availability Details</p>
+        <table class="table table-hover bg-info" id="StockGrid">
+            <thead>
+                <tr class="bg-primary">
+                    <th>Blood Group</th>
+                    <th>Whole Blood</th>
+                    <th>Packed Cells</th>
+                    <th>Frozen Plasma</th>
+                    <th>Platelets</th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stock in Model.LstStockAvailability)
+                {
+                    <tr>
+                        <th>@stock.Bg</th>
+                        <td>@stock.WholeBlood</td>
+                        <td>@stock.PackedCells</td>
+                        <td>@stock.FrozenPlasma</td>
+                        <td>@stock.Platelets</td>
+                        <td><a class="details" href="javascript:;">Update</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p class="text-center text-success">Blood Cost Details</p>
+        <table class="table table-hover bg-info" id="CostGrid">
+            <thead>
+                <tr class="bg-primary">
+                    <th>Blood Group</th>
+                    <th>Product Type</th>
+                    <th>Quantity</th>
+                    <th>Units</th>
+                    <th>Cost/Units</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stock in Model.LstBloodCost)
+                {
+                    <tr>
+                        <th>@stock.Bg</th>
+                        <th>@stock.ProductType</th>
+                        <td>@stock.Qty</td>
+                        <td>@stock.Units</td>
+                        <td>@stock.Cost</td>
+                        <td><a class="costDetails" href="javascript:;">Update</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="dialog" style="display: none">
+    </div>
+</body>
+</html>
+

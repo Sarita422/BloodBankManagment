@@ -1,0 +1,28 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <script>
+window.onload = function () {
+
+    var chart = new CanvasJS.Chart("stockContainer", {
+	animationEnabled: true,
+	theme: "light2", // "light1", "dark1", "dark2"
+	exportEnabled: true,
+	title: {
+		text: "Blood Stock Details"
+	},
+	data: [{
+		type: "column",
+		dataPoints:  @Html.Raw(ViewBag.StockPoints)
+	}]
+});
+chart.render();
+}
+    </script>
+</head>
+<body>
+    <div id="stockContainer" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+</body>
+</html>

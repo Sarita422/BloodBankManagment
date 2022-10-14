@@ -1,0 +1,72 @@
+﻿@model BloodBankManagementSystem.Models.StockAvailabilityModel
+<html>
+<head>
+
+</head>
+<body>
+    @using (Html.BeginForm("UpdateBloodStock", "Validated", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>
+                    @Html.LabelFor(bg => bg.Bg, "Blood Group :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(bg => bg.Bg, new { @class = "form-control", @readonly = "true" })
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(whole => whole.WholeBlood, "Whole Blood :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(whole => whole.WholeBlood, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(packed => packed.PackedCells, "Packed Cells :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(packed => packed.PackedCells, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(frozen => frozen.FrozenPlasma, "Frozen Plasma :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(frozen => frozen.FrozenPlasma, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(platelets => platelets.Platelets, "Platelets :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(platelets => platelets.Platelets, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Update" class="btn btn-primary btn-block center-block" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    }
+</body>
+</html>

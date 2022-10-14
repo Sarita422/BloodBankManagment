@@ -1,0 +1,236 @@
+﻿@model BloodBankManagementSystem.Models.RegistrationModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title>Donor Registration</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#City').prop("disabled", true);
+            $('#State').change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/GetCityList",
+                    data: { state: $('#State').val() },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#City').empty();
+                        $('#City').append('<option>--Select--</option>');
+                        $.each(data, function (i, data) {
+                            $('#City').append('<option>' + data + '</option>');
+                        });
+                        $('#City').prop("disabled", false);
+                    }
+                });
+            });
+            $("#Name").keypress(function () {
+                $("#Name").css({ "border-color": "skyblue" });
+            });
+            $("#Email").keypress(function () {
+                $("#Email").css({ "border-color": "skyblue" });
+            });
+            $("#Password").keypress(function () {
+                $("#Password").css({ "border-color": "skyblue" });
+            });
+            $("#Cpassword").keypress(function () {
+                $("#Cpassword").css({ "border-color": "skyblue" });
+            });
+            $("#State").click(function () {
+                $("#State").css({ "border-color": "skyblue" })
+            });
+            $("#City").click(function () {
+                $("#City").css({ "border-color": "skyblue" })
+            });
+            $("#Age").keypress(function () {
+                $("#Age").css({ "border-color": "skyblue" })
+            });
+            $("#Weight").keypress(function () {
+                $("#Weight").css({ "border-color": "skyblue" })
+            });
+            $("#Mobile").keypress(function () {
+                $("#Mobile").css({ "border-color": "skyblue" })
+            });
+            $("#Gender").click(function () {
+                $("#Gender").css({ "border-color": "skyblue" })
+            });
+            $('#btnRegister').click(function () {
+                debugger;
+                var count = 0;
+                if ($("#Name").val() == "") {
+                    $("#Name").val('');
+                    $("#Name").css({ "border-color": "red" });
+                    $("#Name").attr("placeholder", "Please Enter Your Name");
+                    count++;
+                }
+                var email = $("#Email").val()
+                var rexemail = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                if ($("#Email").val() == "" || !email.match(rexemail)) {
+                    $("#Email").val('');
+                    $("#Email").css({ "border-color": "red" });
+                    $("#Email").attr("placeholder", "Please Enter Valid Email Id");
+                    count++;
+                }
+                if ($("#Password").val() == "") {
+                    $("#Password").val('');
+                    $("#Password").css({ "border-color": "red" });
+                    $("#Password").attr("placeholder", "Please Enter Password");
+                    count++;
+                }
+                var pwd = $("#Password").val();
+                var cpwd = $("#Cpassword").val();
+                if (cpwd != pwd || cpwd == "") {
+                    $("#Cpassword").val('');
+                    $("#Cpassword").css({ "border-color": "red" });
+                    $("#Cpassword").attr("placeholder", "Password is Not Matching");
+                    count++;
+                }
+                if ($("#State").val() == "") {
+                    $("#State").val('');
+                    $("#State").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").val('');
+                    $("#City").css({ "border-color": "red" });
+                    count++;
+                }
+                var age = $("#Age").val();
+                var rexage = /^[0-9]+$/
+                if (age == "") {
+                    $("#Age").val('');
+                    $("#Age").css({ "border-color": "red" });
+                    $("#Age").attr("placeholder", "Please Enter Your Age");
+                    count++;
+                }
+                else if (!age.match(rexage)) {
+                    $("#Age").val('');
+                    $("#Age").css({ "border-color": "red" });
+                    $("#Age").attr("placeholder", "Please Enter Your Valid Age");
+                    count++;
+                }
+                else if (age < 18 || age > 60) {
+                    $("#Age").val('');
+                    $("#Age").css({ "border-color": "red" });
+                    $("#Age").attr("placeholder", "Age Must be Between 18 to 60");
+                    count++;
+                }
+                var weight = $("#Weight").val();
+                if (weight == "") {
+                    $("#Weight").val('');
+                    $("#Weight").css({ "border-color": "red" });
+                    $("#Weight").attr("placeholder", "Please Enter Your Weight");
+                    count++;
+                }
+                else if (!weight.match(rexage)) {
+                    $("#Weight").val('');
+                    $("#Weight").css({ "border-color": "red" });
+                    $("#Weight").attr("placeholder", "Please Enter Your Valid Weight");
+                    count++;
+                }
+                else if (weight < 50) {
+                    $("#Weight").val('');
+                    $("#Weight").css({ "border-color": "red" });
+                    $("#Weight").attr("placeholder", "Weight Must be Greater 50");
+                    count++;
+                }
+                var mbl = $("#Mobile").val();
+                var rexmbl = /^[0-9]{10}$/
+                if (mbl == "") {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Contact Number");
+                    count++;
+                }
+                else if (!mbl.match(rexmbl)) {
+                    $("#Mobile").val('');
+                    $("#Mobile").css({ "border-color": "red" });
+                    $("#Mobile").attr("placeholder", "Please Enter Your Valid Contact Number");
+                    count++;
+                }
+                if ($("#Gender").val() == "") {
+                    $("#Gender").val('');
+                    $("#Gender").css({ "border-color": "red" });
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Donors Registration</div>
+        <div class="panel-body">
+            <div class="container">
+                @using (Html.BeginForm("DonorRegistration","Home",FormMethod.Post))
+                {
+                <div class="row">
+                    <div class="col-lg-1 col-md-1"></div>
+                    <div class="col-lg-5 col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(name => name.Name, "Name :")
+                            @Html.TextBoxFor(name => name.Name, new { @class = "form-control", placeholder = "Enter Your Name" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(email => email.Email, "Email Id :")
+                            @Html.TextBoxFor(email => email.Email, new { @class = "form-control", placeholder = "Enter Your Email Id" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(pwd => pwd.Password, "Password :")
+                            @Html.PasswordFor(pwd => pwd.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(cpwd => cpwd.Cpassword, "Confirm Password :")
+                            @Html.PasswordFor(cpwd => cpwd.Cpassword, new { @class = "form-control", placeholder = "Enter Password To Confirm" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(state => state.State, "State :")
+                            @Html.DropDownListFor(state => state.State, new SelectList(Model.StateList), "--Select--", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(city => city.City, "City :")
+                            @Html.DropDownListFor(city => city.City, new SelectList(Model.CityList), "--Select--", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(age => age.Age, "Age :")
+                            @Html.TextBoxFor(age => age.Age, new { @class = "form-control", placeholder = "Enter Your Age" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(weight => weight.Weight, "Weight :")
+                            @Html.TextBoxFor(weight => weight.Weight, new { @class = "form-control", placeholder = "Enter Your Weight" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(gender => gender.Gender, "Select Gender :")
+                            @Html.DropDownListFor(gender => gender.Gender, new SelectList(Model.GenderList), "--Select--", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(mobile => mobile.Mobile, "Contact No. :")
+                            @Html.TextBoxFor(mobile => mobile.Mobile, new { @class = "form-control", placeholder = "Enter Your Contact Number" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(addr => addr.Address, "Address :")
+                            @Html.TextAreaFor(addr => addr.Address, new { @class = "form-control", placeholder = "Enter Your Address " })
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-md-1"></div>
+                </div>
+                    <input type="submit" value="Register" id="btnRegister" class="btn btn-primary btn-block center-block" />
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

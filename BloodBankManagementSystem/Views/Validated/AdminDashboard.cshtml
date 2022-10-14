@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "AdminDashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html>
+<head>
+   
+</head>
+<body>
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <a href="/Validated/PendingBloodRequests" class="list-group-item" style="color:darkblue;text-align:center">Pending Blood Requests<span class="badge">@ViewBag.Bloodreq</span></a>
+                <a href="/Validated/DonorBloodRequests" class="list-group-item" style="color:darkblue;text-align:center">Blood Donate Requests<span class="badge">@ViewBag.Donatereq</span></a>
+                <a href="/Validated/UpdateStockAvailabilityDetails" class="list-group-item" style="color:darkblue;text-align:center">Stock Availability Details</a>
+                <a href="/Validated/RegisteredClientDetails" class="list-group-item" style="color:darkblue;text-align:center">Registered Hospitals/Donors/Acceptors Details</a>
+                <a href="/Validated/UnregisteredBloodRequest" class="list-group-item" style="color:darkblue;text-align:center">Emergency Blood Requests<span class="badge">@ViewBag.Unregreq</span></a>
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @{Html.RenderAction("BloodReqGraph");}
+            </div>            
+        </div>
+        <div>
+          
+        </div>
+</body>
+</html>

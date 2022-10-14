@@ -1,0 +1,153 @@
+﻿@model BloodBankManagementSystem.Models.DonateBloodRequestModel
+@{
+    ViewBag.Title = "HospitalDonateBloodRequest";
+    Layout = "~/Views/Shared/_HospitalLayout.cshtml";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+        $(document).ready(function () {
+            $("#Bg").click(function () {
+                $("#Bg").css({ "border-color": "skyblue" });
+            });
+            $("#BloodProduct").click(function () {
+                $("#BloodProduct").css({ "border-color": "skyblue" });
+            });
+            $("#datepicker").click(function () {
+                $("#datepicker").css({ "border-color": "skyblue" });
+            });
+            $("#AmountOfBlood").click(function () {
+                $("#AmountOfBlood").css({ "border-color": "skyblue" });
+            });
+            $("#YourQuotation").click(function () {
+                $("#YourQuotation").css({ "border-color": "skyblue" });
+            });
+            $('#btnSubmit').click(function () {
+                var count = 0;
+                if ($("#Bg").val() == "") {
+                    $("#Bg").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#BloodProduct").val() == "") {
+                    $("#BloodProduct").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#datepicker").val() == "") {
+                    $("#datepicker").val('');
+                    $("#datepicker").css({ "border-color": "red" });
+                    $("#datepicker").attr("placeholder", "Please Select Blood DOnation Date");
+                    count++;
+                }
+                var bloodamount = $("#AmountOfBlood").val();
+                var regamountbg = /^[0-9]+$/;
+                if ($("#AmountOfBlood").val() == "") {
+                    $("#AmountOfBlood").val('');
+                    $("#AmountOfBlood").css({ "border-color": "red" });
+                    $("#AmountOfBlood").attr("placeholder", "Please Enter Amount of Blood You Want to Donate");
+                    count++;
+                }
+                else if (!bloodamount.match(regamountbg)) {
+                    $("#AmountOfBlood").val('');
+                    $("#AmountOfBlood").css({ "border-color": "red" });
+                    $("#AmountOfBlood").attr("placeholder", "Please Enter Amount of Blood in ML");
+                    count++;
+                }
+                var quot = $("#YourQuotation").val();
+                var regCost = /^[0-9]+$/;
+                if ($("#YourQuotation").val() == "") {
+                    $("#YourQuotation").val('');
+                    $("#YourQuotation").css({ "border-color": "red" });
+                    $("#YourQuotation").attr("placeholder", "Please Enter Selling Cost per 100ML");
+                    count++;
+                }
+                else if (!quot.match(regCost)) {
+                    $("#YourQuotation").val('');
+                    $("#YourQuotation").css({ "border-color": "red" });
+                    $("#YourQuotation").attr("placeholder", "Please Enter Selling Cost in Rupees");
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            });
+            $('#Bg').change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Validated/GetBloodCost",
+                    data: { bg: $('#Bg').val() },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#Cost').val(data);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Hospital Blood Donation Request</div>
+        <div class="panel-body bg-success">
+            @Html.DisplayTextFor(msg => msg.Message)
+            <div class="container">
+                @using (Html.BeginForm("HospitalDonateBloodRequest", "Validated", FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4"></div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(bg => bg.Bg, "Blood Group :")
+                                @Html.DropDownListFor(bg => bg.Bg, new SelectList(Model.BgList), "--select--", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(product => product.BloodProduct, "Blood Product Type :")
+                                @Html.TextBoxFor(product => product.BloodProduct, new { @class = "form-control", @readonly = "true", @Value = "Whole Blood" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(date => date.Date, "Expected donation date :")
+                                <div class="input-group">
+                                    @Html.TextBoxFor(date => date.Date, new { @class = "form-control", @autocomplete = "off", @id = "datepicker", placeholder = "Select Date for Blood Donation" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(amountofblood => amountofblood.AmountOfBlood, "Amount Of  Blood :")
+                                @Html.TextBoxFor(amountofblood => amountofblood.AmountOfBlood, new { @class = "form-control", placeholder = "Enter Amount of Blood You Want to Donate" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(cost => cost.Cost, "Blood bank expected buying cost :")
+                                @Html.TextBoxFor(cost => cost.Cost, new { @class = "form-control", @readonly = "true", placeholder = "Buying Cost Per 100ML" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(yourqt => yourqt.YourQuotation, "Your Selling Price :")
+                                @Html.TextBoxFor(yourqt => yourqt.YourQuotation, new { @class = "form-control", placeholder = "Enter Selling Cost Per 100ML" })
+                            </div>
+                            <input type="submit" value="Submit" id="btnSubmit" class="btn btn-primary btn-block center-block" />
+                        </div>
+                        <div class="col-lg-4 col-md-4"></div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div>    </div>
+</body>
+</html>
+
+

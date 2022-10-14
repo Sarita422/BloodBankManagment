@@ -1,0 +1,83 @@
+﻿@model List<BloodBankManagementSystem.Models.RegisteredClientModel>
+@{
+    ViewBag.Title = "RegisteredClientDetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dahsboard</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                title: "Update Client Details",
+                dialogClass: 'myTitleClass'
+            });
+            $("#ClientGrid .details").click(function () {
+                var rid = $(this).closest("tr").find("th").eq(0).html();
+                var name = $(this).closest("tr").find("td").eq(0).html();
+                var email = $(this).closest("tr").find("td").eq(1).html();
+                var password = $(this).closest("tr").find("td").eq(2).html();
+                var address = $(this).closest("tr").find("td").eq(3).html();
+                var mobile = $(this).closest("tr").find("td").eq(4).html();
+                $.ajax({
+                    
+                    type: "POST",
+                    url: "/Validated/UpdateRegisteredClient",
+                    data: { Rid: rid, Name: name, Email: email, Password: password, Address: address, Mobile: mobile },
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                        $('#dialog').dialog('open');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <table class="table table-hover bg-info" id="ClientGrid">
+        <thead>
+            <tr class="bg-primary">
+                <th>Registration Id</th>
+                <th>Name</th>
+                <th>Email Id</th>
+                <th>Password</th>
+                <th>Address</th>
+                <th>Contact Number</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in Model)
+            {
+                <tr>
+                    <th>@v.Rid</th>
+                    <td>@v.Name</td>
+                    <td>@v.Email</td>
+                    <td>@v.Password</td>
+                    <td>@v.Address</td>
+                    <td>@v.Mobile</td>
+                    <td><a class="details" href="javascript:;">Update</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="dialog" style="display: none">
+    </div>
+</body>
+</html>
+

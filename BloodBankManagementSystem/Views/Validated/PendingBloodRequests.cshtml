@@ -1,0 +1,172 @@
+﻿@model BloodBankManagementSystem.Models.BloodRequestViewModel
+@{
+    ViewBag.Title = "PendingBloodRequests";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    *@
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+        $(function () {
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                title: "Respond To Blood Request",
+                dialogClass: 'myTitleClass'
+                
+            });
+            $("#RequestGrid .details").click(function () {
+                var rid = $(this).closest("tr").find("td").eq(0).html();
+                var name = $(this).closest("tr").find("td").eq(1).html();
+                var contact = $(this).closest("tr").find("td").eq(7).html();
+                var email = $(this).closest("tr").find("td").eq(10).html();
+                $.ajax({
+                    type: "POST",
+                    url: "/Validated/RespondToBloodRequest",
+                    data: { Rid: rid, Name: name, Mobile: contact, Email: email },
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (response) {
+                        $('#dialog').html(response);
+                        $('#dialog').dialog('open');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+            $("#HospInd").click(function () {
+                $("#HospInd").css({ "border-color": "skyblue" });
+            });
+            $("#datepicker").click(function () {
+                $("#datepicker").css({ "border-color": "skyblue" });
+            });
+            $("#City").click(function () {
+                $("#City").css({ "border-color": "skyblue" });
+            });
+            $('#btnSearch').click(function () {
+                debugger;
+                var count = 0;
+                if ($("#HospInd").val() == "") {
+                    $("#HospInd").css({ "border-color": "red" });
+                    count++;
+                }
+                if ($("#datepicker").val() == "") {
+                    $("#datepicker").css({ "border-color": "red" });
+                    $("#datepicker").attr({ "placeholder": "Please Select Date" });
+                    count++;
+                }
+                if ($("#City").val() == "") {
+                    $("#City").css({ "border-color": "red" });
+                    count++;
+                }
+                if (count == 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+        .myTitleClass .ui-dialog-titlebar {
+            background: #337ab7;
+            color: white
+        }
+        .myTitleClass .ui-dialog-titlebar-close {
+            background-image: url(../Images/close.jpg);
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("SearchBloodRequest", "Validated", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="form-group">
+                    @Html.DropDownListFor(hospind => hospind.ListSearchValues.HospInd, new SelectList(Model.ListSearchValues.HospIndList), "--Select--", new { @class = "form-control", id = "HospInd" })
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(date => date.ListSearchValues.Date, new { @class = "form-control", @autocomplete = "off", id = "datepicker", placeholder = "Select Date"})
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="form-group">
+                    @Html.DropDownListFor(city => city.ListSearchValues.City, new SelectList(Model.ListSearchValues.CityList), "--Select--", new { @class = "form-control",id = "City" })
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <input type="submit" value="Search" id="btnSearch" class="btn btn-primary btn-block center-block" />
+            </div>
+        </div>
+    }
+    <div>
+        <table class="table table-responsive" id="RequestGrid">
+            <thead>
+                <tr>
+                    <th style="display:none"></th>
+                    <th>Hospital/Individual</th>
+                    <th>Date</th>
+                    <th>Blood Group</th>
+                    <th>Product Type</th>
+                    <th>Amount of Blood Required</th>
+                    <th>Requester Quotation</th>
+                    <th>Contact Number</th>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th style="display:none"></th>
+                    <th>Respond</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.ListBloodRequest)
+                {
+                <tr>
+                    <td style="display:none">@v.Rid</td>
+                    <td>@v.Name</td>
+                    <td>@v.Date</td>
+                    <td>@v.Bg</td>
+                    <td>@v.ProductType</td>
+                    <td>@v.AmountOfBlood</td>
+                    <td>@v.YourQuotation</td>
+                    <td>@v.Mobile</td>
+                    <td>@v.City</td>
+                    <td>@v.Address</td>
+                    <td style="display:none">@v.Email</td>
+                    <td><a class="details" href="javascript:;">Respond</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="dialog" style="display: none">
+    </div>
+</body>
+</html>
+

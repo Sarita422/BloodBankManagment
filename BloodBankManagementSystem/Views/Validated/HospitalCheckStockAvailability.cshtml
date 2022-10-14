@@ -1,0 +1,37 @@
+﻿@model List<BloodBankManagementSystem.Models.StockAvailabilityModel>
+@{
+    Layout = "~/Views/Shared/_HospitalLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <title>Hospital </title>
+</head>
+<body>
+    <div class="container">
+        <p class="text-center text-success">Blood Stock Availability Details In Blood Bank</p>
+        <table class="table table-hover bg-info">
+            <thead>
+                <tr class="bg-primary">
+                    <th>Blood Group</th>
+                    <th>Whole Blood</th>
+                    <th>Packed Cells</th>
+                    <th>Frozen Plasma</th>
+                    <th>Platelets</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stock in Model)
+                {
+                    <tr>
+                        <th>@stock.Bg</th>
+                        <td>@stock.WholeBlood</td>
+                        <td>@stock.PackedCells</td>
+                        <td>@stock.FrozenPlasma</td>
+                        <td>@stock.Platelets</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

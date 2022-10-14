@@ -1,0 +1,137 @@
+﻿@model BloodBankManagementSystem.Models.RespondToBloodRequestDonateModel
+<html>
+<head>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#no").click(function () {
+                $("#txtCost").hide();
+            });
+            $("#yes").click(function () {
+                $("#txtCost").show();
+            });
+        });
+        var SendEmail = function () {
+            debugger;
+            var email = $("#Email").val();
+            var available;
+            if ($('input[name=BloodAvailability]:checked').val() == "True")
+                available = "We Accepted your blood Donating Request," + " " + $("#Date").val() +"Blood Bank Buying Cost is " + $("#Cost").val();
+            else
+                available = "Sorry,Blood Bank already Has Stock of same Blood Group.";
+            var sub = available;
+            var body = "Dear, " + $("#Name").val() + " " + available + " " + $("#Message").val();
+            $.ajax({
+                type: "POST",
+                url: "/Validated/SendMailToUser",
+                data: { toEmail: email, subject: sub, emailBody: body },
+                success: function (data) {
+                    if (data = "true")
+                        alert("Mail Sent Succefully");
+                    else
+                        alert("Unable to Send Mail");
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker(); //Initialise any date pickers
+        });
+    </script>
+</head>
+<body>
+
+    <div class="form-group">
+        <div class="row" style="display:none">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(rid => rid.Rid)
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextBoxFor(rid => rid.Rid)
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(name => name.Name, "Name :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextBoxFor(name => name.Name, new { @class = "form-control", @readonly = "true" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(email => email.Email, "Email Id :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextBoxFor(email => email.Email, new { @class = "form-control", @readonly = "true" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(mbl => mbl.Mobile, "Contact Number :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextBoxFor(mbl => mbl.Mobile, new { @class = "form-control", @readonly = "true" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(ava => ava.BloodAvailability, "Blood Required :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.RadioButtonFor(ava => ava.BloodAvailability, true, new { @id = "yes" }) Yes
+                @Html.RadioButtonFor(ava => ava.BloodAvailability, false, new { @id = "no" }) No
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="txtCost" style="display:none">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(cost => cost.Cost, "Blood Bank Buying Cost :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextBoxFor(cost => cost.Cost, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(date => date.Date, " Date :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                <div class="input-group-sm">
+                    @Html.TextBoxFor(date => date.Date, new { @class = "form-control datepicker", placeholder = "Select Date", @autocomplete = "off" })
+                    @*<span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                @Html.LabelFor(msg => msg.Message, "Message :")
+            </div>
+            <div class="col-lg-8 col-md-8">
+                @Html.TextAreaFor(msg => msg.Message, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-primary btn-block center-block" onclick="SendEmail()">Send Email</a>
+        @*<input type="submit" value="Submit" onclick="SendEMail()" class="btn btn-primary btn-block center-block" />*@
+    </div>
+
+</body>
+</html>

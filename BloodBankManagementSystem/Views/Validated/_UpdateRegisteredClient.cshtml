@@ -1,0 +1,77 @@
+﻿@model BloodBankManagementSystem.Models.RegisteredClientModel
+<html>
+<head>
+
+</head>
+<body>
+    @using (Html.BeginForm("UpdateClientDetails", "Validated", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>
+                    @Html.LabelFor(rid => rid.Rid, "Registrartion Id :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(rid => rid.Rid, new { @class = "form-control", @readonly = "true" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(name => name.Name, "Name :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(name => name.Name, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(email => email.Email, "Email Id :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(email => email.Email, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(pwd => pwd.Password, "Password :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(pwd => pwd.Password, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(addr => addr.Address, "Address :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(addr => addr.Address, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(mbl => mbl.Mobile, "Contact No. :")
+                </td>
+                <td>
+                    <div class="form-group">
+                        @Html.TextBoxFor(mbl => mbl.Mobile, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Update" class="btn btn-primary btn-block" />
+        </div>
+    }
+</body>
+</html>
+

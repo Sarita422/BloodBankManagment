@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .navbar-dark {
+            background-color: #337ab7;
+            border-color: #E7E7E7;
+        }       
+        .navbar-dark .container .navbar-nav > li > a {
+            color: #bcd8c3;
+            font-size: medium;
+        }
+
+        .navbar-dark .container .navbar-nav > li > a:hover {
+            color: white;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #337ab7;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <div class="container">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" style="color:White">Welcome @Session["name"].ToString()</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/validated/AcceptorsDashboard">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Home/Logout" style="left:1070%">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @*<nav class="navbar navbar-default">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a style="color:white;">
+                        Welcome @Session["name"].ToString()
+                    </a>
+                </li>
+                <li><a href="/validated/AcceptorsDashboard">Home</a></li>
+                <li><a href="/Home/Logout" style="left:1070%">Logout</a></li>
+            </ul>
+        </div>
+
+    </nav>*@
+    <div class="container body-content">
+        @RenderBody()
+
+    </div>
+    <br />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Blood Bank Management System</p>
+    </footer>
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
